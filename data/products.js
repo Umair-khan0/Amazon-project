@@ -106,7 +106,7 @@ const products = [
     },
     {
       id: "77919bbe-0e56-475b-adde-4f24dfed3a04",
-      image: "images/products/luxury-tower-set-6-piece.jpg",
+      image: "images/products/luxury-towel-set-6-piece.jpg",
       name: "Luxury Towel Set - Graphite Gray",
       rating: {
         stars: 4.5,
