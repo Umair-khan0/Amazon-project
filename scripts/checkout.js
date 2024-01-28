@@ -1,16 +1,16 @@
 import {cart} from '../data/cart.js'
-import { products } from '../data/products.js';
+import {products} from '../data/products.js';
+import {formatCurrency} from './utils/money.js';
 
 let orderSummaryHTML='';
-
-cart.forEach((cartItem) =>{
+cart.forEach(cartItem =>{
     const productId=cartItem.productId;
     let matchingProduct;
     products.forEach((product) =>{
-        if(product.id=== productId){
-            matchingProduct= product;
+        if(product.id === productId){
+            matchingProduct=product;
         }
-    })
+    });
 
     orderSummaryHTML+=`<div class="cart-item-container">
     <div class="delivery-date">
@@ -19,14 +19,14 @@ cart.forEach((cartItem) =>{
 
     <div class="cart-item-details-grid">
       <img class="product-image"
-        src="${matchingProduct.image}">
+        src="/${matchingProduct.image}">
 
       <div class="cart-item-details">
         <div class="product-name">
           ${matchingProduct.name}
         </div>
         <div class="product-price">
-          ${(matchingProduct.priceCents/100).toFixed(2)}
+          ${(formatCurrency(matchingProduct.priceCents))};
         </div>
         <div class="product-quantity">
           <span>
@@ -90,3 +90,4 @@ cart.forEach((cartItem) =>{
     `
 });
 document.querySelector('.js-order-summary').innerHTML=orderSummaryHTML;
+console.log(orderSummaryHTML);
