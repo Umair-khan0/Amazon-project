@@ -1,11 +1,12 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import {cart, removeFromCart, calculateCartQuantity} from "../data/cart.js"
+import {cart, removeFromCart, calculateCartQuantity, updateDeliveryOption} from "../data/cart.js"
 import {products} from '../data/products.js';
 import {formatCurrency} from './utils/money.js';
 import {deliveryOptions} from '../data/deliveryOptions.js';
 
-let cartSummaryHTML='';
+// The cartSummaryHTML variable is for storing the html that are generating through JavaScript and then this variable will be assign to the html grid Element, we store the productId to the productId variable of the product that are in the cart and then the compare cart productId to all products Id, The varible deliveryOption will find out the user option. The dayjs function will help to find out the date it is extenal liberary which are imported.
 
+let cartSummaryHTML='';
 cart.forEach(cartItem =>{
     const productId=cartItem.productId;
     let matchingProduct;
@@ -70,6 +71,8 @@ cart.forEach(cartItem =>{
     `
 });
 
+//Return function for generating html for delivery option and assigning date and charges. 
+
 function deliveryOptionsHTML(matchingProduct, cartItem){
   let html= '';
   deliveryOptions.forEach((deliveryOption) =>{
@@ -85,8 +88,11 @@ function deliveryOptionsHTML(matchingProduct, cartItem){
     const isChecked =  deliveryOption.id === cartItem.deliveryOptionId;
 
     html += `
-       <div class="delivery-option">
-          <input type="radio"
+       <div class="delivery-option js-delivery-option"
+          data-product-id="${matchingProduct.id}"
+          data-delivery-option-id="${deliveryOption.id}">
+          <input type="radio" 
+          
            ${isChecked ? 'checked' : ''}
            
             class="delivery-option-input"
@@ -106,6 +112,7 @@ function deliveryOptionsHTML(matchingProduct, cartItem){
 
 document.querySelector('.js-order-summary').innerHTML=cartSummaryHTML;
 
+// For deleting or removing a product from the cart
 document.querySelectorAll('.js-delete-link').forEach((link) =>{
   link.addEventListener('click', () =>{
     const productId=link.dataset.productId;
@@ -115,6 +122,7 @@ document.querySelectorAll('.js-delete-link').forEach((link) =>{
   })
 })
 
+// For calculating products in the cart
 const totalCartItems = document.querySelector('.js-total-cart-quantity');
 
 function updateCartQuantity(){
@@ -122,3 +130,15 @@ function updateCartQuantity(){
   totalCartItems.innerHTML= `${cartQuantity} items`;
 }
 updateCartQuantity();
+
+// For choosing delivery option
+document.querySelectorAll('.js-delivery-option').forEach(element =>{
+  element.addEventListener('click', ()=>{
+    const {productId, deliveryOptionId}=element.dataset;
+    /*it is the short  hand property for
+    const productId = element.dataset;
+    const deliveryOptionId=element.dataset;*/
+
+    updateDeliveryOption(productId, deliveryOptionId);
+  })
+})

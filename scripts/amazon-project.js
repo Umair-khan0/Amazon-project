@@ -2,12 +2,14 @@ import {calculateCartQuantity, addToCart, cart} from '../data/cart.js';
 import {products} from '../data/products.js';
 import {formatCurrency} from './utils/money.js';
 
+// Function for updating cart quantity in the cart
 const cartElement=document.querySelector('.js-cart-quantity');
 function updateCartQuantity(){
   let cartQuantity=calculateCartQuantity();
   cartElement.innerHTML=cartQuantity;
 }
-updateCartQuantity();
+// ForEach loop will generate html for every product that are in the home page and added to the variable productHTML.
+
 let productHTML='';
 products.forEach((product) =>{
     // generating html
@@ -62,8 +64,7 @@ products.forEach((product) =>{
 });
 document.querySelector('.js-products-grid').innerHTML=productHTML;
 
-
-
+// it will add those product on which we want to click and will add to the cart by comparing the product id
 document.querySelectorAll('.js-add-to-cart').forEach((button) =>{
   button.addEventListener('click', () =>{
     const productId=button.dataset.productId;

@@ -1,3 +1,4 @@
+// Cart variable for storing the product that are in the cart,if cart does not have products it will assign some default products to the cart
 export let cart = JSON.parse(localStorage.getItem('cart'));
 if(!cart){
   cart=[{
@@ -11,6 +12,8 @@ if(!cart){
   }];
 }
 
+// Function for calculating cart quantity,and then return the value that are store in the cartQuantity variable.
+
 export function calculateCartQuantity(){
   let cartQuantity=0;
   cart.forEach(cartItem =>{
@@ -19,10 +22,14 @@ export function calculateCartQuantity(){
   return cartQuantity;
 }
 
+// Function for storing the cart product to the localStorage.
 
 function saveStorage(){
   localStorage.setItem('cart', JSON.stringify(cart));
 }
+
+// Function for updating the product quantity that has already in the cart, firt we check the product that it is present in the cart or not if matching item found it will update the product quantity if not it will recieve the default values.
+
 export function addToCart(productId){  
     let matchingItem;
       cart.forEach((item) =>{
@@ -41,6 +48,8 @@ export function addToCart(productId){
       }
       saveStorage();
   }
+
+  // Function for pushing product to the newcart and then reassigning to the cart, for this we created a new array and the ForEach loop will push all those product that are not equal to the those product which have that productId(parameter).
  export function removeFromCart(productId){
     const newCart=[];
     cart.forEach(cartItem =>{
@@ -52,5 +61,17 @@ export function addToCart(productId){
     saveStorage();
   }
 
+// Function for updating the delivery option date, first we find the product in the cart that user want to update through product id and the second we find the user option through the delivery option id and then save it to the local storage.
+
+export  function updateDeliveryOption(productId, deliveryOptionId){
+    let matchingItem;
+      cart.forEach((cartItem) =>{
+        if(productId===cartItem.productId){
+          matchingItem = cartItem;
+        }
+      });
+      matchingItem.deliveryOptionId=deliveryOptionId;
+      saveStorage();
+  }
 
 
