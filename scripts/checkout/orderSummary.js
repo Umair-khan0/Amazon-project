@@ -1,8 +1,9 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import {cart, removeFromCart, calculateCartQuantity, updateDeliveryOption} from "../../data/cart.js"
-import {products} from '../../data/products.js';
+import { getProduct } from '../../data/products.js'; 
 import {formatCurrency} from '../utils/money.js';
-import {deliveryOptions} from '../../data/deliveryOptions.js';
+import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js';
+import { renderPaymentSummary } from './paymentSummary.js';
 
 export function rendorOrderSummary(){
     // The cartSummaryHTML variable is for storing the html that are generating through JavaScript and then this variable will be assign to the html grid Element, we store the productId to the productId variable of the product that are in the cart and then the compare cart productId to all products Id, The varible deliveryOption will find out the user option. The dayjs function will help to find out the date it is extenal liberary which are imported.
@@ -10,21 +11,11 @@ export function rendorOrderSummary(){
     let cartSummaryHTML='';
     cart.forEach(cartItem =>{
         const productId=cartItem.productId;
-        let matchingProduct;
-
-        products.forEach(product =>{
-            if(product.id === productId){
-                matchingProduct=product;
-            }
-        });
+        let matchingProduct=getProduct(productId);
 
         const deliveryOptionId = cartItem.deliveryOptionId;
-        let deliveryOption;
-        deliveryOptions.forEach(option =>{
-          if(deliveryOptionId === option.id){
-            deliveryOption = option;
-          }
-        });
+        let deliveryOption=getDeliveryOption(deliveryOptionId);
+        
 
         const today = dayjs();
 
@@ -72,7 +63,7 @@ export function rendorOrderSummary(){
         `
     });
 
-    //Return function for generating html for delivery option and assigning date and charges. 
+    //Return function generating html for delivery option and assigning date and charges. 
 
     function deliveryOptionsHTML(matchingProduct, cartItem){
       let html= '';
@@ -120,6 +111,7 @@ export function rendorOrderSummary(){
         removeFromCart(productId);
         document.querySelector(`.js-container-${productId}`).remove();
         updateCartQuantity();
+        renderPaymentSummary();
       })
     })
 
@@ -143,6 +135,7 @@ export function rendorOrderSummary(){
         updateDeliveryOption(productId, deliveryOptionId);
         // This function will regenerate the html changes occur in checkout page, this is called recursion function call itself again.
         rendorOrderSummary();
+        renderPaymentSummary();
       })
     })
 }
